@@ -32,7 +32,7 @@ const resolvers = {
                 {new: true}
             );
         },
-        removeBook: async (parent, { bookId }, user) => {
+        deleteBook: async (parent, { bookId }, user) => {
             if (!user) {
                 throw new AuthenticationError("Must be logged in to remove a book.")
             }

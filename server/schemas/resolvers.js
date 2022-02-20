@@ -1,5 +1,7 @@
-const { User, Book } = require('../models');
+const { User } = require('../models');
+const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
+const { AggregationCursor } = require('mongoose');
 
 const resolvers = {
     Query: {
@@ -11,13 +13,13 @@ const resolvers = {
         },
     },
     Mutation: {
-        createUser: async ( parent, args, { username, email, password } ) => {
+        createUser: async ( parent, args, context ) => {
 
-            if(!username || !email || !password) {
+            if(!args) {
                 throw new AuthenticationError("All fields must have an imput.");
             }
 
-            const user = await User.create({ username, email, password });
+            const user = await User.create(args);
             const token = signToken(user);
             return { token, user };
         },
@@ -26,37 +28,37 @@ const resolvers = {
                 throw new AuthenticationError("Must be logged in to save a book.")
             }
 
-            return await User.findOneAndUpdate(
+            return await User.findByIdAndUpdate(
                 { _id: context.user._id },
-                {$addToSet: { savedBooks: bookData }},
-                {new: true}
-            );
+                { $push: { savedBooks: bookData }},
+                { new: true }
+              );
         },
         deleteBook: async (parent, { bookId }, user) => {
             if (!user) {
                 throw new AuthenticationError("Must be logged in to remove a book.")
             }
 
-            return await User.findOneAndUpdate(
+            return await User.findByIdAndUpdate(
                 { _id: context.user._id },
-                { $pull: { savedBooks: { bookId } } },
-                { new: true }
-              );
+                { $pull: { savedBooks: { bookId }}},
+            );
         },
-        login: async (parent, args, { email, password }) => {
+        login: async (parent, { email, password }) => {
             const user = await User.findOne({ email });
       
             if (!user) {
-              throw new AuthenticationError('No user with this email found!');
+              throw new AuthenticationError('No user found');
             }
       
             const correctPw = await user.isCorrectPassword(password);
       
             if (!correctPw) {
-              throw new AuthenticationError('Incorrect password!');
+              throw new AuthenticationError('Incorrect credentials');
             }
       
             const token = signToken(user);
+      
             return { token, user };
         },
     }

@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
-import { getMe, deleteBook } from '../utils/API';
+// import { getMe, deleteBook } from '../utils/API';
+import { GET_ME } from '.././utils/queries'
+import { REMOVE_BOOK } from '../utils/mutation';
+import { useMutation } from '@apollo/client';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
+  const getMe = useMutation(GET_ME);
+  const deleteBook = useMutation(REMOVE_BOOK);
+  
   const [userData, setUserData] = useState({});
 
   // use this to determine if `useEffect()` hook needs to run again

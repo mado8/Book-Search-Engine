@@ -13,12 +13,10 @@ const resolvers = {
         },
     },
     Mutation: {
-        createUser: async ( parent, args, context ) => {
-
+        createUser: async (parent, args) => {
             if(!args) {
-                throw new AuthenticationError("All fields must have an imput.");
+                throw new AuthenticationError("Must input all fields!")
             }
-
             const user = await User.create(args);
             const token = signToken(user);
             return { token, user };
@@ -48,7 +46,7 @@ const resolvers = {
             const user = await User.findOne({ email });
       
             if (!user) {
-              throw new AuthenticationError('No user found');
+              throw new AuthenticationError('No user found.');
             }
       
             const correctPw = await user.isCorrectPassword(password);

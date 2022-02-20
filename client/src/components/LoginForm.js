@@ -9,7 +9,7 @@ import { useMutation } from '@apollo/client'
 import Auth from '../utils/auth';
 
 const LoginForm = () => {
-  const loginUser = useMutation(LOGIN_USER)
+  const [loginUser] = useMutation(LOGIN_USER)
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -30,9 +30,10 @@ const LoginForm = () => {
     }
 
     try {
-      const response = await loginUser({variables: { ...userFormData }});
+      console.log(loginUser)
+      const { data } = await loginUser({variables: { ...userFormData }});
 
-      const token = response.login.token
+      const token = data.login.token
 
       Auth.login(token);
 

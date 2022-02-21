@@ -6,7 +6,7 @@ const { AggregationCursor } = require('mongoose');
 const resolvers = {
     Query: {
         me: async ( parent, args, { user } ) => {
-            if(!context.user) {
+            if(!user) {
                 throw new AuthenticationError("Must be logged in");
             }
             return await User.findOne({_id: user._id})

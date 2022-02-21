@@ -32,13 +32,13 @@ const resolvers = {
                 { new: true }
               );
         },
-        deleteBook: async (parent, { bookId }, user) => {
+        deleteBook: async (parent, { bookId }, { user }) => {
             if (!user) {
                 throw new AuthenticationError("Must be logged in to remove a book.")
             }
 
             return await User.findByIdAndUpdate(
-                { _id: context.user._id },
+                { _id: user._id },
                 { $pull: { savedBooks: { bookId }}},
             );
         },

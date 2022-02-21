@@ -21,8 +21,8 @@ const resolvers = {
             const token = signToken(user);
             return { token, user };
         },
-        saveBook: async (parent, { bookData }, { user }) => {
-            if(!user) {
+        saveBook: async (parent, { bookData }, context) => {
+            if(!context.user) {
                 throw new AuthenticationError("Must be logged in to save a book.")
             }
 

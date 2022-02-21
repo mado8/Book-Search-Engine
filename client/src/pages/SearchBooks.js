@@ -10,7 +10,7 @@ import { SAVE_BOOK } from '../utils/mutations';
 
 const SearchBooks = () => {
   // set variable to use SAVE_BOOK mutation from apollo hook
-  const saveBook = useMutation(SAVE_BOOK);
+  const [saveBook] = useMutation(SAVE_BOOK);
   // create state for holding returned google api data
   const [searchedBooks, setSearchedBooks] = useState([]);
   // create state for holding our search field data
@@ -70,7 +70,7 @@ const SearchBooks = () => {
     }
 
     try {
-      const response = await saveBook(bookToSave, token);
+      const response = await saveBook({variables: { bookData: bookToSave }});
 
       if (!response.ok) {
         throw new Error('something went wrong!');

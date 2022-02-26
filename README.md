@@ -32,7 +32,7 @@ To launch the app, navigate to the root directory within the terminal and type "
 This project is licensed under MIT.  
 
 ## Link
-Link to live url: https://dashboard.heroku.com/apps/mado-book-search-engine
+Link to live url: https://mado-book-search-engine.herokuapp.com/
 
 ## Questions
 
